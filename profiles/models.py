@@ -16,3 +16,4 @@ class UserExtra(models.Model):
     class Meta:
         verbose_name = 'User Profile'
         verbose_name_plural = 'User Profiles'
+        
