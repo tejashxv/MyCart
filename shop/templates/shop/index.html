@@ -1,0 +1,220 @@
+{% extends 'shop/basic.html' %} {% block body %} {% load static %}
+
+<div class="container my-4">
+  {% for category_group in allprod %}
+  <h2 class="my-3">{{ category_group.category }}</h2>
+
+  <!-- Carousel for each category -->
+  <div
+    id="carousel-{{ category_group.category }}"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-inner">
+      {% for chunk in category_group.product_chunks %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div class="row">
+          {% for product in chunk %}
+          <div class="col-md-3 mb-4">
+            <div class="card h-100 d-flex flex-column">
+              <img
+                src="{{ product.image.url }}"
+                class="card-img-top"
+                id="{{product.id}}"
+                alt="{{ product.product_name }}"
+                style="height: 200px; object-fit: contain"
+              />
+              <div class="card-body flex-grow-1">
+                <h5 class="card-title" id="namepr{{product.id}}">{{ product.product_name }}</h5>
+                <!-- Truncated description -->
+                <p class="card-text description">{{ product.desc }}</p>
+                <p class="card-text">
+                  <strong>Price:</strong> {{ product.product_price }} Rs
+                </p>
+              </div>
+            
+              <div class="card-footer mt-auto">
+                <span id="divpr{{product.id}}">
+                  <button
+                    href="#"
+                    id="pr{{product.id}}"
+                    class="btn btn-primary cart"
+                  >
+                    Add to cart
+                  </button>
+                </span>
+                <a
+                  href="/shop/productview/{{product.id}}"
+                  id="qv{{product.id}}"
+                  class="btn btn-primary quickview"
+                  >QuickView</a
+                >
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Carousel controls -->
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carousel-{{ category_group.category }}"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carousel-{{ category_group.category }}"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Include Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+{% endblock %} {% block js %}
+<script>
+  // Initialize the cart from localStorage or create an empty object
+  let cart = localStorage.getItem("cart")
+    ? JSON.parse(localStorage.getItem("cart"))
+    : {};
+
+  // Update cart count and UI on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Add item to cart when "Add to Cart" button is clicked
+  $(document).on("click", ".cart", function () {
+    const idstr = this.id.toString(); // Button ID
+    cart[idstr] = (cart[idstr] || 0) + 1; // Increment or initialize quantity
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save to localStorage
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Update cart UI with items
+  function updateCartUI() {
+    for (let item in cart) {
+      const itemContainer = document.getElementById("div" + item); // Target item's div
+      if (itemContainer) {
+        // Show + and - buttons for items in the cart
+        itemContainer.innerHTML = `
+          <button id='minus${item}' class='btn btn-primary minus'>-</button>
+          <span id='quant${item}'>${cart[item]}</span>
+          <button id='plus${item}' class='btn btn-primary plus'>+</button>
+        `;
+      }
+    }
+
+    var popover = new bootstrap.Popover(document.getElementById("popcart"), {
+      html: true,
+      container: "body",
+    });
+    
+    // Update popover
+    $("#popcart").popover();
+    updatePopover(cart);
+    
+    function updatePopover(cart) {
+      console.log("update popover");
+      var popStr = "<h5>Cart for your item in my shopping cart</h5>";
+      var i = 1;
+    
+      for (var item in cart) {
+        var item_id = "name" + item;
+        console.log("Looking for ID:", document.getElementById("name"+item).innerText);
+        var itemName = document.getElementById("name" + item)?.innerText || "Unknown Item";
+        popStr += `<b>${i}.</b> ${itemName} Qty: ${cart[item]}<br>`;
+        i++;
+      }
+    
+      console.log(popStr);
+      console.log(document.getElementById("popcart").innerHTML);
+    
+      // Set the new content
+      var popoverInstance = bootstrap.Popover.getInstance(
+        document.getElementById("popcart")
+      );
+      if (popoverInstance) {
+        popoverInstance.setContent({
+          ".popover-body": popStr,
+        });
+      } else {
+        document.getElementById("popcart").setAttribute("data-bs-content", popStr);
+        $("#popcart").popover("show");
+      }
+    }
+    
+
+    // Restore "Add to Cart" button for items not in the cart
+    document.querySelectorAll(".cart").forEach((btn) => {
+      const id = btn.id;
+      if (!cart[id]) {
+        const itemContainer = document.getElementById("div" + id);
+        if (itemContainer) {
+          itemContainer.innerHTML = `
+            <button id="${id}" class="btn btn-primary cart">Add to Cart</button>
+          `;
+        }
+      }
+    });
+  }
+
+  // Update cart item count in navbar or badge
+  function updateCartCount() {
+    const cartCount = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+    const cartBadge = document.getElementById("cart");
+    if (cartBadge) {
+      cartBadge.innerText = cartCount;
+    }
+  }
+
+  // Decrement item quantity when "minus" button is clicked
+  $(document).on("click", ".minus", function () {
+    const id = this.id.replace("minus", ""); // Extract product ID
+    if (cart[id] > 1) {
+      cart[id] -= 1; // Decrease quantity
+    } else {
+      delete cart[id]; // Remove item from cart if quantity reaches 0
+
+      // Restore "Add to Cart" button
+      const itemContainer = document.getElementById("div" + id);
+      if (itemContainer) {
+        itemContainer.innerHTML = `
+          <button id="${id}" class="btn btn-primary cart">Add to Cart</button>
+        `;
+      }
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Increment item quantity when "plus" button is clicked
+  $(document).on("click", ".plus", function () {
+    const id = this.id.replace("plus", ""); // Extract product ID
+    cart[id] += 1; // Increase quantity
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
+    updateCartUI();
+    updateCartCount();
+  });
+</script>
+{% endblock %}

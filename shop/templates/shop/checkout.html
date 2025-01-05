@@ -1,0 +1,47 @@
+{% extends 'shop/basic.html' %} {% block title %} Check Out {% endblock %} 
+
+{% block body %}
+
+<div class="container my-5">
+  <div class="card shadow-sm border-0">
+    <div class="row g-0">
+      <!-- Product Image -->
+      <div class="col-md-4">
+        <div class="p-3 text-center">
+          <img
+            src="/media/{{ products.image }}"
+            class="img-fluid rounded"
+            alt="{{ products.product_name }}"
+          />
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="col-md-8">
+        <div class="card-body">
+          <h2 class="card-title">{{ products.product_name }}</h2>
+          <h4 class="text-success mb-3">
+            Price: {{ products.product_price }} Rs
+          </h4>
+          <p class="card-text">{{ products.desc }}</p>
+
+          <!-- Buttons -->
+          <div class="mt-4">
+            <button class="btn btn-success btn-lg me-2">Buy Now</button>
+            <span id="divpr{{product.id}}">
+              <button
+                href="#"
+                id="pr{{product.id}}"
+                class="btn btn-primary cart"
+              >
+                Add to cart
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

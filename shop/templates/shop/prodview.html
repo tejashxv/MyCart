@@ -1,0 +1,180 @@
+{% extends 'shop/basic.html' %} {% block title %} {{ products.product_name }} {% endblock %} {% block body %}
+<div class="container my-5">
+  <div class="card shadow-sm border-0">
+    <div class="row g-0">
+      <!-- Product Image -->
+      <div class="col-md-4">
+        <div class="p-3 text-center">
+          <img
+            src="/media/{{ products.image }}"
+            class="img-fluid rounded"
+            alt="{{ products.product_name }}"
+          />
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="col-md-8">
+        <div class="card-body">
+          <h2 class="card-title">{{ products.product_name }}</h2>
+          <h4 class="text-success mb-3">
+            Price: {{ products.product_price }} Rs
+          </h4>
+          <p class="card-text">{{ products.desc }}</p>
+
+          <!-- Buttons -->
+          <div class="mt-4">
+            <button class="btn btn-success btn-lg me-2">Buy Now</button>
+            <span id="divpr{{product.id}}">
+              <button
+                href="#"
+                id="pr{{product.id}}"
+                class="btn btn-primary cart"
+              >
+                Add to cart
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+{% endblock %} {% block js %}
+<script>
+  // Initialize cart from localStorage or create an empty cart
+  //if (localStorage.getItem('cart') == null) {
+  //var cart = {};
+  //} else {
+  //  cart = JSON.parse(localStorage.getItem('cart'));
+  //  updateCartBadge();
+  //}
+  //
+  //// Add to Cart button functionality
+  //document.querySelectorAll('.add-to-cart').forEach(button => {
+  //  button.addEventListener('click', function () {
+  //      let productId = this.getAttribute('data-id');
+  //
+  //      // Update cart object
+  //      if (cart[productId] != undefined) {
+  //          cart[productId] += 1; // Increment quantity if already in cart
+  //      } else {
+  //          cart[productId] = 1; // Add new item to cart with quantity 1
+  //      }
+  //
+  //      // Save updated cart to localStorage
+  //      localStorage.setItem('cart', JSON.stringify(cart));
+  //
+  //      // Update cart badge
+  //      updateCartBadge();
+  //
+  //      // Optional: Show a success message or notification
+  //      alert("Product added to cart!");
+  //  });
+  //});
+  //
+  //// Function to update the cart badge with item count
+  //function updateCartBadge() {
+  //  let cartCount = Object.keys(cart).reduce((sum, key) => sum + cart[key], 0);
+  //  document.getElementById('cart').innerText = cartCount;
+  //}
+  //
+  //// Initialize Bootstrap popovers (if needed for your design)
+  //var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  //var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  //  return new bootstrap.Popover(popoverTriggerEl);
+  //});
+
+  // Initialize cart from localStorage or create an empty cart
+  let cart = localStorage.getItem("cart")
+    ? JSON.parse(localStorage.getItem("cart"))
+    : {};
+
+  // Update cart count and UI on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Add item to cart when "Add to Cart" button is clicked
+  $(document).on("click", ".cart", function () {
+    const idstr = this.id.toString(); // Button ID
+    cart[idstr] = (cart[idstr] || 0) + 1; // Increment or initialize quantity
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save to localStorage
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Update cart UI with items
+  function updateCartUI() {
+    for (let item in cart) {
+      const itemContainer = document.getElementById("div" + item); // Target item's div
+      if (itemContainer) {
+        // Show + and - buttons for items in the cart
+        itemContainer.innerHTML = `
+        <button id='minus${item}' class='btn btn-primary minus'>-</button>
+        <span id='quant${item}'>${cart[item]}</span>
+        <button id='plus${item}' class='btn btn-primary plus'>+</button>
+      `;
+      }
+    }
+
+    // Restore "Add to Cart" button for items not in the cart
+    document.querySelectorAll(".cart").forEach((btn) => {
+      const id = btn.id;
+      if (!cart[id]) {
+        const itemContainer = document.getElementById("div" + id);
+        if (itemContainer) {
+          itemContainer.innerHTML = `
+          <button id="${id}" class="btn btn-primary cart">Add to Cart</button>
+        `;
+        }
+      }
+    });
+  }
+
+  // Update cart item count in navbar or badge
+  function updateCartCount() {
+    const cartCount = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+    const cartBadge = document.getElementById("cart");
+    if (cartBadge) {
+      cartBadge.innerText = cartCount;
+    }
+  }
+
+  // Decrement item quantity when "minus" button is clicked
+  $(document).on("click", ".minus", function () {
+    const id = this.id.replace("minus", ""); // Extract product ID
+    if (cart[id] > 1) {
+      cart[id] -= 1; // Decrease quantity
+    } else {
+      delete cart[id]; // Remove item from cart if quantity reaches 0
+
+      // Restore "Add to Cart" button
+      const itemContainer = document.getElementById("div" + id);
+      if (itemContainer) {
+        itemContainer.innerHTML = `
+        <button id="${id}" class="btn btn-primary cart">Add to Cart</button>
+      `;
+      }
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Increment item quantity when "plus" button is clicked
+  $(document).on("click", ".plus", function () {
+    const id = this.id.replace("plus", ""); // Extract product ID
+    cart[id] += 1; // Increase quantity
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
+    updateCartUI();
+    updateCartCount();
+  });
+</script>
+{% endblock %}

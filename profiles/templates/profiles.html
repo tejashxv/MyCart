@@ -1,0 +1,87 @@
+<!-- {% extends "headerTail.html" %}  -->
+<!-- {% include "headerTail.html" %}  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+</head>
+<body>
+  
+<div class="flex flex-col justify-center font-[sans-serif] sm:h-screen p-4">
+  <div class="max-w-md w-full mx-auto border border-gray-300 rounded-2xl p-8">
+    <div class="text-center mb-12">
+      <a href="javascript:void(0)"><img src="https://readymadeui.com/readymadeui.svg" alt="logo" class='w-40 inline-block' /></a>
+    </div>
+
+    <form>
+      <div class="space-y-6">
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Username</label>
+          <input name="username" type="text" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter username" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Email Address</label>
+          <input name="email" type="email" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter email" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Password</label>
+          <input name="password" type="password" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter password" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Confirm Password</label>
+          <input name="cpassword" type="password" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Confirm password" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Profile Picture</label>
+          <input name="profile_picture" type="file" accept="image/*" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Bio</label>
+          <textarea name="bio" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Write something about yourself..."></textarea>
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Location</label>
+          <input name="location" type="text" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter location" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Birth Date</label>
+          <input name="birth_date" type="date" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Website</label>
+          <input name="website" type="url" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter website URL" />
+        </div>
+        <div>
+          <label class="text-gray-800 text-sm mb-2 block">Phone Number</label>
+          <input name="phone_number" type="tel" class="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter phone number" />
+        </div>
+        <div class="flex items-center">
+          <input id="terms" name="terms" type="checkbox" class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+          <label for="terms" class="text-gray-800 ml-3 block text-sm">
+            I accept the <a href="javascript:void(0);" class="text-blue-600 font-semibold hover:underline ml-1">Terms and Conditions</a>
+          </label>
+        </div>
+      </div>
+
+      <div class="!mt-12">
+        <button type="submit" class="w-full py-3 px-4 text-sm tracking-wider font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+          Create an account
+        </button>
+      </div>
+      <p class="text-gray-800 text-sm mt-6 text-center">Already have an account? <a href="javascript:void(0);" class="text-blue-600 font-semibold hover:underline ml-1">Login here</a></p>
+    </form>
+  </div>
+</div>
+<script>
+  console.log('Hello from profiles.html');
+</script>
+</body>
+</html>
+
