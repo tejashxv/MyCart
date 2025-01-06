@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 def profile(request):
@@ -29,3 +30,43 @@ def profile(request):
         
         
     return render(request, 'shop/profiles.html',{'user':User.objects.all()})
+
+
+def identify_user_type(email_or_username):
+    user = User.objects.filter(Q(username=email_or_username) | Q(email=email_or_username)).first()
+    if user:
+        if user.email == email_or_username:
+            return "email"
+        elif user.username == email_or_username:
+            return "username"
+    return "not_found"
+
+
+def loginPage(request):
+    if request.method == "POST":
+        password = request.POST.get('password')
+        email = request.POST.get("email")
+        print(password,email)
+        user = User.objects.filter(Q(username = email) | Q(email = email))
+        verify = identify_user_type(email)
+        if not user.exists():
+            messages.error(request, "User not found")
+            return redirect('/profile')
+        if verify == "email":
+            user = authenticate(email=email,password=password)
+        elif verify == "username":
+            user = authenticate(username=email,password=password)
+        login(request, user)
+        
+        return redirect("/shop")
+            
+    return render(request, "shop/login.html")
+
+
+
+def logoutPage(request):
+    logout(request)
+    return redirect("/shop")
+        
+            
+    

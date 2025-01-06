@@ -5,4 +5,7 @@ from .  import views,models
 
 urlpatterns = [
     path("", views.profile, name="profiles"),
+    path("login/", views.loginPage, name="loginPage"),
+    path("logout/", views.logoutPage, name="logoutPage"),
+    
 ]
