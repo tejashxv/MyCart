@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Placed</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md">
+        <div
+          class="container mx-auto px-4 py-3 flex items-center justify-between"
+        >
+          <!-- Logo -->
+          <div class="flex items-center space-x-4">
+            <a
+              href="#"
+              class="text-2xl font-bold text-gray-800 hover:text-gray-600"
+            >
+              Order Placed!
+            </a>
+          </div>
+  
+          <!-- Right Section -->
+          <div class="flex items-center space-x-6">
+            <!-- Links -->
+            <div class="hidden md:flex space-x-4">
+              <a
+                href="/shop"
+                class="text-gray-800 hover:text-blue-500 font-medium"
+                >Home</a
+              >
+              <a
+                href="/shop/about/"
+                class="text-gray-800 hover:text-blue-500 font-medium"
+                >About</a
+              >
+  
+              
+              
+              
+            </div>
+  
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+              <button id="menu-button" class="text-gray-800 focus:outline-none">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+  
+          <!-- Mobile Menu -->
+          <div id="mobile-menu" class="hidden md:hidden">
+            <div class="bg-gray-100 p-4">
+              <a href="/shop" class="block py-2 text-gray-800 hover:text-blue-500"
+                >Home</a
+              >
+              <a
+                href="/shop/about/"
+                class="block py-2 text-gray-800 hover:text-blue-500"
+                >About</a
+              >
+  
+              <a
+                href="/shop/contact"
+                class="block py-2 text-gray-800 hover:text-blue-500"
+                >Contact</a
+              >
+            </div>
+          </div>
+        </div>
+      </nav>
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-8 md:p-12 max-w-lg text-center">
+      <div class="text-green-500">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-16 h-16 mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m0 0a9 9 0 11-2.618-6.576m2.618 6.576a9 9 0 01-2.618 6.576"
+          />
+        </svg>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold mt-4">Thank You!</h1>
+      <p class="text-gray-700 mt-2">
+        Your order has been placed successfully. We appreciate your purchase!.{{id}} is your order to tract the order
+      </p>
+      <div class="mt-6">
+        <a
+          href="/shop"
+          class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full shadow-md transition"
+        >
+          Continue Shopping
+        </a>
+        
+      </div>
+      <div class="mt-6 text-sm text-gray-500">
+        If you have any questions, feel free to <a href="/shop/contact/" class="text-blue-500 underline">contact us</a>.
+      </div>
+    </div>
+  </div>
+  <script>
+    localStorage.clear();
+  </script>
+</body>
+</html>

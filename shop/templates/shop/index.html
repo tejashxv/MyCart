@@ -106,7 +106,13 @@ crossorigin="anonymous"
   // Add item to cart when "Add to Cart" button is clicked
   $(document).on("click", ".cart", function () {
     const idstr = this.id.toString(); // Button ID
-    cart[idstr] = (cart[idstr] || 0) + 1; // Increment or initialize quantity
+    const productName = document.getElementById("name" + idstr)?.innerText || "Unknown Item"; // Get product name
+
+    if (cart[idstr] != undefined) {
+      cart[idstr].quantity += 1; // Increment quantity if already exists
+    } else {
+      cart[idstr] = { quantity: 1, name: productName }; // Add new item
+    }
 
     localStorage.setItem("cart", JSON.stringify(cart)); // Save to localStorage
     updateCartUI();
@@ -121,57 +127,18 @@ crossorigin="anonymous"
         // Show + and - buttons for items in the cart
         itemContainer.innerHTML = `
           <button id='minus${item}' class='btn btn-primary minus'>-</button>
-          <span id='quant${item}'>${cart[item]}</span>
+          <span id='quant${item}'>${cart[item].quantity}</span>
           <button id='plus${item}' class='btn btn-primary plus'>+</button>
         `;
       }
     }
 
-    var popover = new bootstrap.Popover(document.getElementById("popcart"), {
-      html: true,
-      container: "body",
-    });
-    
-    // Update popover
-    $("#popcart").popover();
     updatePopover(cart);
-    
-    function updatePopover(cart) {
-      var popStr = "<h5>Cart for your items</h5>";
-      var i = 1;
-  
-      for (var item in cart) {
-          var itemName = document.getElementById("name" + item)?.innerText || "Unknown Item";
-          popStr += `<b>${i}.</b> ${itemName} Qty: ${cart[item]}<br>`;
-          i++;
-      }
-  
-      
-  
-      var popoverTrigger = document.getElementById("popcart");
-  
-      // Set the content and reinitialize popover
-      popoverTrigger.setAttribute("data-bs-content", popStr);
-  
-      // Destroy existing popover instance, if any
-      var existingPopover = bootstrap.Popover.getInstance(popoverTrigger);
-      if (existingPopover) {
-          existingPopover.dispose();
-      }
-  
-      // Reinitialize with updated content
-      new bootstrap.Popover(popoverTrigger, {
-          html: true,
-          container: "body",
-      });
-  }
-  
-      
 
     // Restore "Add to Cart" button for items not in the cart
     document.querySelectorAll(".cart").forEach((btn) => {
       const id = btn.id;
-      if (!cart[id]) {
+      if (!cart[id]?.quantity) {
         const itemContainer = document.getElementById("div" + id);
         if (itemContainer) {
           itemContainer.innerHTML = `
@@ -182,9 +149,37 @@ crossorigin="anonymous"
     });
   }
 
+  // Update popover content
+  function updatePopover(cart) {
+    let popStr = "<h5>Cart for your items</h5>";
+    let i = 1;
+
+    for (let item in cart) {
+      popStr += `<b>${i}.</b> ${cart[item].name} Qty: ${cart[item].quantity}<br>`;
+      i++;
+    }
+
+    const popoverTrigger = document.getElementById("popcart");
+
+    // Set the content and reinitialize popover
+    popoverTrigger.setAttribute("data-bs-content", popStr);
+
+    // Destroy existing popover instance, if any
+    const existingPopover = bootstrap.Popover.getInstance(popoverTrigger);
+    if (existingPopover) {
+      existingPopover.dispose();
+    }
+
+    // Reinitialize with updated content
+    new bootstrap.Popover(popoverTrigger, {
+      html: true,
+      container: "body",
+    });
+  }
+
   // Update cart item count in navbar or badge
   function updateCartCount() {
-    const cartCount = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+    const cartCount = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
     const cartBadge = document.getElementById("cart");
     if (cartBadge) {
       cartBadge.innerText = cartCount;
@@ -194,8 +189,8 @@ crossorigin="anonymous"
   // Decrement item quantity when "minus" button is clicked
   $(document).on("click", ".minus", function () {
     const id = this.id.replace("minus", ""); // Extract product ID
-    if (cart[id] > 1) {
-      cart[id] -= 1; // Decrease quantity
+    if (cart[id].quantity > 1) {
+      cart[id].quantity -= 1; // Decrease quantity
     } else {
       delete cart[id]; // Remove item from cart if quantity reaches 0
 
@@ -216,23 +211,23 @@ crossorigin="anonymous"
   // Increment item quantity when "plus" button is clicked
   $(document).on("click", ".plus", function () {
     const id = this.id.replace("plus", ""); // Extract product ID
-    cart[id] += 1; // Increase quantity
+    cart[id].quantity += 1; // Increase quantity
 
     localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
     updateCartUI();
     updateCartCount();
   });
 
-
-  //clear cart 
+  // Clear cart
   function clearCart() {
-    cart = JSON.parse(localStorage.getItem("cart")); 
-    for(var item in cart){
-      document.getElementById("div"+item).innerHTML = ' <button id="'+ item +'" class="btn btn-primary cart">Add to cart</button>';
+    for (let item in cart) {
+      document.getElementById("div" + item).innerHTML =
+        '<button id="' + item + '" class="btn btn-primary cart">Add to cart</button>';
     }
     localStorage.clear();
     cart = {};
-    updateCartCount(cart);
+    updateCartCount();
   }
 </script>
+
 {% endblock %}

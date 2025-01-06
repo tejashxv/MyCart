@@ -60,6 +60,9 @@ def tracker(request):
     
 def search(request):
     return HttpResponse("this is search")
+def Thankyou(request):
+    id = Orders.objects.latest('order_id').order_id
+    return render(request, "shop/thankyou.html",{ 'id':id})
     
     
 def productview(request, myid):
@@ -69,9 +72,22 @@ def productview(request, myid):
     
     
 def checkout(request):
-    products = Products.objects.all()  # or any logic to get the products
+    if request.method == "POST":
+        items_json = request.POST.get('itemsJson', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        address = request.POST.get('address', '')
+        phone = request.POST.get('phone', '')
+        city = request.POST.get('city', '')
+        state = request.POST.get('state', '')
+        zip_code = request.POST.get('zip_code', '')
+        orders = Orders( items_json=items_json ,name=name, email=email, address=address, phone=phone, city=city, state=state, zip_code=zip_code)  
+        orders.save()
+        placed = True
+       
+        return render(request, 'shop/checkout.html', {'placed':placed, 'id':id})
 
-    return render(request, 'shop/checkout.html', {'products': products})
+    return render(request, 'shop/checkout.html')
     
     
     
