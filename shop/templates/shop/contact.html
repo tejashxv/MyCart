@@ -28,3 +28,15 @@
 
 
 {% endblock %}
+
+
+{% block js %}
+<script>
+{% if thank %}
+alert("Thank you for contacting us. We will get back to you soon.");
+
+document.location = "/shop/contact";
+{% endif %}
+</script>
+
+{% endblock %}
