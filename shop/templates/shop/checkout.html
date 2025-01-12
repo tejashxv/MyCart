@@ -129,6 +129,12 @@
               
             </ul>
           </div>
+          <div class="flex items-center space-x-2 text-sm text-gray-600 bg-gray-100 p-2 mt-4">
+            <p>Your cart total is <span class="text-gray-500" id="totalprice">Current Page</span>. Thanks for using My Awesome Cart</p>
+            
+            
+          </div>
+
         </div>
       </div>
     </div>
@@ -137,7 +143,7 @@
       <div class="bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="p-6">
           <h2 class="text-2xl font-bold mb-4">Step 2 - Address and Detail</h2>
-          <form id="checkout-form" method="post" action="/shop/order/">
+          <form id="checkout-form" method="post">
             {% csrf_token %}
             <input type="hidden" name="itemsJson" id="itemsJson">
             <div class="mb-4">
@@ -293,6 +299,8 @@
         cart = JSON.parse(localStorage.getItem("cart"));
       }
       console.log(cart);
+      var sum = 0;
+      var totalprice = 0;
 
       if ($.isEmptyObject(cart)){
         mystr = `<h3>Your cart is empty!</h3>`;
@@ -301,6 +309,9 @@
       for (var item in cart) {
         let name = cart[item].name;
         let qty = cart[item].quantity;
+        let itemprice = cart[item].price;
+        sum = sum + qty;
+        totalprice = totalprice + qty * itemprice;
 
         mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
               ${name}
@@ -309,7 +320,11 @@
         $("#items").append(mystr);
 
         
-      }}
+      }
+      
+    
+    }
+    document.getElementById("totalprice").innerText = totalprice;
 
       document.getElementById("itemsJson").value = JSON.stringify(cart);
       

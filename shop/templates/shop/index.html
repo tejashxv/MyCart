@@ -28,8 +28,8 @@
                 <h5 class="card-title" id="namepr{{product.id}}">{{ product.product_name }}</h5>
                 <!-- Truncated description -->
                 <p class="card-text description">{{ product.desc }}</p>
-                <p class="card-text">
-                  <strong>Price:</strong> {{ product.product_price }} Rs
+                <p class="card-text" >
+                  <strong>Price:</strong> <span id="pricepr{{product.id}}">{{ product.product_price }} Rs</span>
                 </p>
               </div>
             
@@ -107,12 +107,15 @@ crossorigin="anonymous"
   $(document).on("click", ".cart", function () {
     const idstr = this.id.toString(); // Button ID
     const productName = document.getElementById("name" + idstr)?.innerText || "Unknown Item"; // Get product name
+    const productPrice = document.getElementById("price" + idstr)?.innerText || "Unknown Item"; 
+    console.log(productPrice);
 
     if (cart[idstr] != undefined) {
       cart[idstr].quantity += 1; // Increment quantity if already exists
     } else {
-      cart[idstr] = { quantity: 1, name: productName }; // Add new item
+      cart[idstr] = { quantity: 1, name: productName, price: parseInt(productPrice) }; // Add new item
     }
+    console.log(cart);
 
     localStorage.setItem("cart", JSON.stringify(cart)); // Save to localStorage
     updateCartUI();

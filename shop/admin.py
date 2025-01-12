@@ -4,6 +4,7 @@ from .models import *
 admin.site.register(Products)
 admin.site.register(Contact)
 admin.site.register(Orders)
+admin.site.register(OrderUpdate)
 
 # Register your models here.
 admin.site.site_header = "Tejash Administration"  # The header displayed at the top of the admin panel
