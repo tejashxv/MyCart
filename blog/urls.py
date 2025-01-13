@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     path("",views.index,name="BlogIndex"),
-    path("blogpost",views.blogpost,name="BlogPost"),
+    path("blogpost/<int:id>",views.blogpost,name="BlogPost"),
 ]
