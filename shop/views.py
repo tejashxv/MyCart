@@ -4,6 +4,8 @@ from .models import *
 from itertools import groupby
 from itertools import islice
 import json
+from django.views.decorators.csrf import csrf_exempt
+
 
 from math import ceil
 # Create your views here.
@@ -109,6 +111,7 @@ def checkout(request):
     if request.method == "POST":
         items_json = request.POST.get('itemsJson', '')
         name = request.POST.get('name', '')
+        amount = request.POST.get('amount', '')
         email = request.POST.get('email', '')
         address = request.POST.get('address', '')
         phone = request.POST.get('phone', '')
@@ -129,7 +132,8 @@ def checkout(request):
                 phone=phone,
                 city=city,
                 state=state,
-                zip_code=zip_code
+                zip_code=zip_code,
+                amount=amount
             )
             orders.save()
 
@@ -143,10 +147,24 @@ def checkout(request):
         except Exception as e:
             # Print errors
             print(f"Error saving order: {e}")
-            return render(request, 'shop/checkout.html', {'error': 'Order could not be saved.'})
+            # return render(request, 'shop/checkout.html', {'error': 'Order could not be saved.'})
+            #requet paytm to transfer the amount to your account after payment by user
+            param_dict={
 
+            'MID': 'WorldP64425807474247',
+            'ORDER_ID': 'orders.order_id',
+            'TXN_AMOUNT': '1',
+            'CUST_ID': 'email',
+            'INDUSTRY_TYPE_ID': 'Retail',
+            'WEBSITE': 'WEBSTAGING',
+            'CHANNEL_ID': 'WEB',
+            'CALLBACK_URL':'http://127.0.0.1:8000/shop/handlepayment/',
+
+            }
     return render(request, 'shop/checkout.html')
 
     
-    
-    
+@csrf_exempt
+def handlerequest(request):
+    #paytm will send you post request here
+    pass
