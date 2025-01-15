@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from .models import UserExtra
 # Create your views here.
 
 def profile(request):
@@ -15,9 +16,10 @@ def profile(request):
         Last_name = request.POST.get('last_name')
         password = request.POST.get('password')
         user = User.objects.filter(Q(username=username) | Q(email=email))
-        
+        user_exist = False
         if user.exists():
             messages.error(request, 'Username or email already exists')
+            user_exist = True
             return render(request, 'shop/profiles.html')
       
         user = User.objects.create(username=username, email=email,first_name=first_name, last_name=Last_name)
@@ -70,3 +72,11 @@ def logoutPage(request):
         
             
     
+def account(request):
+    
+    return render(request, 'shop/account.html')
+        
+        
+        
+        
+        

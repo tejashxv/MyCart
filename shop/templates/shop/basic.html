@@ -150,7 +150,16 @@
            <!--  <i class="fas fa-user"></i> -->
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#"><i class="fas fa-sliders-h fa-fw"></i> Account</a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a class="dropdown-item">@{{user.username}}</a></li>
+            <li><a class="dropdown-item"><b>{{user.first_name}} {{user.last_name}}</b></a></li>
+            <li><a class="dropdown-item" href="/profile/account/"><i class="fas fa-sliders-h fa-fw"></i> Account</a></li>
+            {% endif %}
+            
+            
+
+            
             <li><a class="dropdown-item" href="#"><i class="fas fa-cog fa-fw"></i> Settings</a></li>
             <li><hr class="dropdown-divider"></li>
 

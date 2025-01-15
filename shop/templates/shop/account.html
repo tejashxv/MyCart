@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Account Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg max-w-md w-full p-6">
+        {% if request.user.is_authenticated %}
+        <!-- Profile Picture -->
+        <div class="flex justify-center mb-4">
+            <img src="https://via.placeholder.com/150" alt="User Profile Picture" class="w-24 h-24 rounded-full border-2 border-indigo-500">
+        </div>
+
+        <!-- User Info -->
+        <div class="text-center">
+            <h2 class="text-xl font-semibold text-gray-800">{{user.first_name}} {{user.last_name}}</h2>
+            <p class="text-gray-500 text-sm">{{user.email}}</p>
+        </div>
+
+        <hr class="my-6">
+
+        <!-- Account Details -->
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Account ID:</span>
+                <span class="text-gray-800 font-medium">123456789</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Membership:</span>
+                <span class="text-gray-800 font-medium">Premium</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Join Date:</span>
+                <span class="text-gray-800 font-medium">January 1, 2023</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Last Login:</span>
+                <span class="text-gray-800 font-medium">January 15, 2025</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-6 space-y-2">
+            <button class="w-full bg-indigo-500 text-white py-2 rounded-md shadow hover:bg-indigo-600">Edit Profile</button>
+           <a href="/profile/logout"><button class="w-full bg-gray-200 text-gray-700 py-2 rounded-md shadow hover:bg-gray-300">Log Out</button></a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
