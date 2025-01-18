@@ -26,19 +26,27 @@
         <div class="space-y-4">
             <div class="flex justify-between items-center">
                 <span class="text-gray-600">Account ID:</span>
-                <span class="text-gray-800 font-medium">{{user.user_uu}}</span>
+                <span class="text-gray-800 font-medium">{{user_extra.username }}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-gray-600">Membership:</span>
-                <span class="text-gray-800 font-medium">Premium</span>
+                <span class="text-gray-600">Address:</span>
+                <span class="text-gray-800 font-medium">{{ user_extra.address | default:"Address no avalibale" }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Pincode:</span>
+                <span class="text-gray-800 font-medium">{{ user_extra.pincode | default:"Pincode no avalibale" }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Number:</span>
+                <span class="text-gray-800 font-medium">{{user_extra.phone_number}}</span>
             </div>
             <div class="flex justify-between items-center">
                 <span class="text-gray-600">Join Date:</span>
-                <span class="text-gray-800 font-medium">January 1, 2023</span>
+                <span class="text-gray-800 font-medium">{{request.user.date_joined}}</span>
             </div>
             <div class="flex justify-between items-center">
                 <span class="text-gray-600">Last Login:</span>
-                <span class="text-gray-800 font-medium">January 15, 2025</span>
+                <span class="text-gray-800 font-medium">{{request.user.last_login}} </span>
             </div>
         </div>
 

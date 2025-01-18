@@ -21,6 +21,9 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- this is razor pay checkout script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
       .font-medium {
         margin-top: 7px;
@@ -129,11 +132,7 @@
               
             </ul>
           </div>
-          <div class="flex items-center space-x-2 text-sm text-gray-600 bg-gray-100 p-2 mt-4">
-            <p>Your cart total is <span class="text-gray-500" id="totalprice">Current Page</span>. Thanks for using My Awesome Cart</p>
-            
-            
-          </div>
+          
 
         </div>
       </div>
@@ -193,6 +192,7 @@
                 name="address"
                 type="text"
                 placeholder="Your Address"
+                value="{{ user_obj.address| default:'Address not available' }}"
                 required
               />
             </div>
@@ -268,6 +268,9 @@
               >
                 Place Order
               </button>
+            </div>
+            <div class="flex items-center space-x-2 text-sm text-gray-600 bg-gray-100 p-2 mt-4">
+              <p>Your cart total is <span class="text-gray-500" id="totalprice">Current Page</span>. Thanks for using My Awesome Cart</p>
             </div>
           </form>
         </div>

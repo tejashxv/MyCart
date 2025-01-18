@@ -5,27 +5,30 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import UserExtra
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
 
 def profile(request):
     
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
+        number = request.POST.get('number')
         first_name = request.POST.get('first_name')
         Last_name = request.POST.get('last_name')
         password = request.POST.get('password')
+        date_joined = request.POST.get('date_joined')
+        
         user = User.objects.filter(Q(username=username) | Q(email=email))
-        user_exist = False
         if user.exists():
             messages.error(request, 'Username or email already exists')
-            user_exist = True
             return render(request, 'shop/profiles.html')
       
-        user = User.objects.create(username=username, email=email,first_name=first_name, last_name=Last_name)
+        user = User.objects.create_user(username=username, email=email,first_name=first_name, last_name=Last_name)
         user.set_password(password)
         user.save()
-        UserExtra.objects.create(user=user)
+        UserExtra.objects.create(user=user,phone_number=number)
         messages.success(request,'registration successfully')
         
         
@@ -34,7 +37,7 @@ def profile(request):
         
     return render(request, 'shop/profiles.html',{'user':User.objects.all()})
 
-
+ 
 def identify_user_type(email_or_username):
     user = User.objects.filter(Q(username=email_or_username) | Q(email=email_or_username)).first()
     if user:
@@ -72,10 +75,10 @@ def logoutPage(request):
     return redirect("/shop")
         
             
-    
+@login_required(login_url='/profile/login/')
 def account(request):
-    
-    return render(request, 'shop/account.html')
+    user_extra = UserExtra.objects.get(user=request.user)
+    return render(request, 'shop/account.html', {'user_extra':user_extra})
         
         
         

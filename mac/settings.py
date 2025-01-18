@@ -139,3 +139,9 @@ MEDIA_URL = '/media/'
 
 
 
+
+
+
+
+RAZOR_KEY_ID = 'rzp_test_NY17O0pSjRmrGP'
+RAZOR_KEY_SECRET = '2prM7GP0jLhhJeXb5Nlw8Ilg'
