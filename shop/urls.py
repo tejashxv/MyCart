@@ -12,7 +12,10 @@ urlpatterns = [
     path("search/",views.search,name="Search"),
     path("productview/<int:myid>",views.productview,name="ProductView"),
     path("checkout/",views.checkout,name="Checkout"),
-    path("order/",views.Thankyou,name="Checkout"),
-    path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
+    path("order/",views.Thankyou,name="Thankyou"),
+    path("payment/",views.payment,name="payment"),
+    path("handler/",views.verify_payment,name="paymenthandler"),
+    
+    # path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
     # path("handlerequest/",views.handlerequest,name="handleRequest"),
 ]

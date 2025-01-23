@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Products(models.Model):
@@ -29,6 +30,7 @@ class Contact(models.Model):
     
     
 class Orders(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     order_id = models.AutoField(primary_key=True)
     items_json = models.CharField(max_length=5000)
     amount = models.IntegerField(default=0)
@@ -39,7 +41,15 @@ class Orders(models.Model):
     city = models.CharField(max_length=100)    
     state = models.CharField(max_length=100,default="")    
     zip_code = models.CharField(max_length=100)
+    currency = models.CharField(max_length=4,null=True , blank=True)
+    payment_capture = models.CharField(max_length=50,null=True , blank=True)
+    razor_pay_order_id = models.CharField(max_length=100, null=True, blank = True)
+    razor_payment_id = models.CharField(max_length=100, null=True, blank = True)
+    razor_payment_signature = models.CharField(max_length=100, null=True, blank = True)
+    created_at = models.DateTimeField(auto_now_add=True ,  null=True)
              
+    class Meta:
+        get_latest_by = 'created_at'
     
     def __str__(self):
         return str(self.order_id)
