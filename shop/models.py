@@ -43,10 +43,12 @@ class Orders(models.Model):
     zip_code = models.CharField(max_length=100)
     currency = models.CharField(max_length=4,null=True , blank=True)
     payment_capture = models.CharField(max_length=50,null=True , blank=True)
-    razor_pay_order_id = models.CharField(max_length=100, null=True, blank = True)
-    razor_payment_id = models.CharField(max_length=100, null=True, blank = True)
-    razor_payment_signature = models.CharField(max_length=100, null=True, blank = True)
+    status = models.CharField(max_length=50,null=True , blank=True)
+    razorpay_order_id = models.CharField(max_length=100, null=True, blank = True)
+    razorpay_payment_id = models.CharField(max_length=100, null=True, blank = True)
+    razorpay_signature = models.CharField(max_length=100, null=True, blank = True)
     created_at = models.DateTimeField(auto_now_add=True ,  null=True)
+    
              
     class Meta:
         get_latest_by = 'created_at'

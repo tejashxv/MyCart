@@ -35,16 +35,22 @@ def profile(request):
         
         
         
-    return render(request, 'shop/profiles.html',{'user':User.objects.all()})
+    return render(request, 'shop/profiles.html',{'user':User.objects.all(),"user_extra":UserExtra.objects.all()})
 
  
 def identify_user_type(email_or_username):
-    user = User.objects.filter(Q(username=email_or_username) | Q(email=email_or_username)).first()
-    if user:
-        if user.email == email_or_username:
-            return "email"
-        elif user.username == email_or_username:
-            return "username"
+    try:
+        
+        user = User.objects.get(username = email_or_username)
+        return "username"
+    except Exception as e:
+        print(e)
+    try:
+        
+        user = User.objects.get(email = email_or_username)
+        return "email"
+    except Exception as e:
+        print(e)
     return "not_found"
 
 
@@ -57,12 +63,19 @@ def loginPage(request):
         verify = identify_user_type(email)
         if not user.exists():
             messages.error(request, "User not found")
+            
+            return redirect('/profile')
+        if verify == "not_found":
+            messages.error(request, "User not found")
+            
             return redirect('/profile')
         if verify == "email":
             user = authenticate(email=email,password=password)
+            print(user)
+            login(request, user)
         elif verify == "username":
             user = authenticate(username=email,password=password)
-        login(request, user)
+            login(request, user)
         
         return redirect("/shop")
             
@@ -77,7 +90,8 @@ def logoutPage(request):
             
 @login_required(login_url='/profile/login/')
 def account(request):
-    user_extra = UserExtra.objects.get(user=request.user)
+    user = request.user
+    user_extra = user.users
     return render(request, 'shop/account.html', {'user_extra':user_extra})
         
         

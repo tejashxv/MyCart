@@ -118,7 +118,7 @@
             <input
               class="shadow appearance-none border rounded w-full py-6 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="address" name="address" type="text" placeholder="Your Address"
-              value="{{ user_obj.address| default:'Address not available' }}" required />
+              value="{{ user_obj.address|default:'Phone not available' }}" required />
           </div>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
@@ -126,7 +126,7 @@
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phone" name="phone" type="tel" placeholder="Your Number" pattern="[0-9]{10}" required />
+              id="phone" value="{{ user_obj.phone| default:'Address not available' }}" name="phone" type="tel" placeholder="Your Number" pattern="[0-9]{10}" required />
           </div>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="city">

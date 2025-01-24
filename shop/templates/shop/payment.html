@@ -23,7 +23,31 @@
         "order_id": "{{ razorpay_order_id }}",  // Razorpay order ID
        // 'callback_url' : '{{callback_url}}',
         "handler": function (response){
-            window.location.href = `http://127.0.0.1:8000/shop/handler/?order_id={{razorpay_order_id}}`
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/shop/handler/';
+    
+            const paymentId = document.createElement('input');
+            paymentId.type = 'hidden';
+            paymentId.name = 'razorpay_payment_id';
+            paymentId.value = response.razorpay_payment_id;
+    
+            const orderId = document.createElement('input');
+            orderId.type = 'hidden';
+            orderId.name = 'razorpay_order_id';
+            orderId.value = response.razorpay_order_id;
+    
+            const signature = document.createElement('input');
+            signature.type = 'hidden';
+            signature.name = 'razorpay_signature';
+            signature.value = response.razorpay_signature;
+    
+            form.appendChild(paymentId);
+            form.appendChild(orderId);
+            form.appendChild(signature);
+    
+            document.body.appendChild(form);
+            form.submit();
         },
             
         "prefill": {

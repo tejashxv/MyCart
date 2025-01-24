@@ -1,17 +1,19 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import *
-from itertools import groupby
 from itertools import islice
+from django.contrib import messages
+
 import json
 from django.views.decorators.csrf import csrf_exempt
 from profiles import models
+from profiles.models import UserExtra
 from django.contrib.auth.decorators import login_required
 import razorpay
 from django.conf import settings
 from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
-
+import datetime
 
 from math import ceil
 # Create your views here.
@@ -45,9 +47,9 @@ def index(request):
 
 
 def cart(request):
-    products = Products.objects.all()  # or any logic to get the products
+    
 
-    return render(request, 'shop/cart.html', {'products': products})
+    return render(request, 'shop/cart.html')
 
 
 
@@ -119,17 +121,16 @@ def productview(request, myid):
 
 
 razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+
 @csrf_exempt
 @login_required(login_url='/profile/login')
 def checkout(request):
     print(request.user)
-    
+    user_obj = models.UserExtra.objects.get(user = request.user)
+
     if request.method == "POST":
+        
         try:
-            # Parse JSON data from request body
-            # data = json.loads(request.body)
-            # print(data)
-            
             # Extract necessary details from the JSON
             items_json = request.POST.get('items_json','')
             name = request.POST.get('name','')
@@ -157,26 +158,41 @@ def checkout(request):
             print("*****")
             print("Razorpay Order:", razorpay_order)
             print("*****")
+            
+            order = Orders.objects.create(
+                user=request.user,
+                items_json=items_json,
+                name=name,
+                email=email,
+                address=address,
+                phone=phone,
+                city=city,
+                state=state,
+                zip_code=zip_code,
+                amount=amount,
+                razorpay_order_id=razorpay_order['id'],
+                currency = currency,
+                status = 'PENDING'
+            )
+            
+            order_update = OrderUpdate.objects.create(
+                order_id = order,
+                update_desc = "Your order is placed"
+                
+            )
+            order_update.save()
 
             # Save user extra details (not order yet)
-            user_obj = models.UserExtra.objects.get(user = request.user)
-            user_obj.address = address
+            user_obj.pincode = zip_code
+            user_obj.email = email
+            user_obj.name = name
+            user_obj.city = city
+            user_obj.state = state
             user_obj.phone_number = phone
+            user_obj.address = address
             user_obj.save()
 
-            # Store order details temporarily (don't save to DB until payment is successful)
-            # request.session['order_data'] = {
-            #     'items_json': items_json,
-            #     'name': name,
-            #     'email': email,
-            #     'phone': phone,
-            #     'address': address,
-            #     'city': city,
-            #     'state': state,
-            #     'zip_code': zip_code,
-            #     'amount': amount,
-            #     'razorpay_order_id': razorpay_order['id']
-            # }
+            
 
             # Prepare context for payment page
             context = {
@@ -204,20 +220,85 @@ def checkout(request):
             # return JsonResponse({"status": "error", "message": "Something went wrong. Please try again."})
 
     # GET request
-    return render(request, 'shop/checkout.html', {})
+    return render(request, 'shop/checkout.html', {'user_obj':user_obj})
 
 
 def payment(request):
     
-    return render(request , 'shop/payment.html',{ })
+    return render(request , 'shop/payment.html',{})
 
 @csrf_exempt
 def verify_payment(request):
-    # order_id = request.POST.get('order_id')
-    # name =  request.POST.get('name')
-    # cart = Orders.objects.get(razor_payment_id = order_id)
-    # cart.name = name
-    # cart.save()
-    return render(request, 'shop/thankyou.html')
-                
+    if request.method == "POST":
+        try:
+            # Get payment details from Razorpay
+            razorpay_payment_id = request.POST.get('razorpay_payment_id')
+            razorpay_order_id = request.POST.get('razorpay_order_id')
+            razorpay_signature = request.POST.get('razorpay_signature')
 
+            # Verify payment signature
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': razorpay_payment_id,
+                'razorpay_signature': razorpay_signature
+            }
+            print(params_dict)
+            razorpay_client.utility.verify_payment_signature(params_dict)
+
+            # Update order status
+            order = Orders.objects.get(razorpay_order_id=razorpay_order_id)
+            order.razorpay_payment_id = razorpay_payment_id
+            order.razorpay_signature = razorpay_signature
+            order.status = 'SUCCESS'
+            order.save()
+
+            return render(request, 'shop/thankyou.html',{"order":order})
+
+        except Orders.DoesNotExist:
+            print("Order not found")
+            return HttpResponse("Order not found", status=400)
+        except razorpay.errors.SignatureVerificationError:
+            return HttpResponse("Invalid payment signature", status=400)
+        except Exception as e:
+            print(f"Error: {e}")
+            return HttpResponse("Payment verification failed", status=500)
+
+    return HttpResponse("Invalid request method", status=405)
+                
+@login_required(login_url='/profile/login')
+def settings(request):
+    try:
+        user_extra = UserExtra.objects.get(user=request.user)
+        user=request.user
+    except UserExtra.DoesNotExist:
+        messages.error(request, "UserExtra details not found.")
+        return render(request, 'shop/profile_settings.html')
+    except User.DoesNotExist:
+        messages.error(request, "User details not found.")
+        return render(request, 'shop/profile_settings.html')
+    if request.method == 'POST':
+        try:
+            
+            user.username = request.POST.get('username','')
+            user.first_name = request.POST.get('first_name','') 
+            user.last_name =  request.POST.get('last_name','')
+            user.email = request.POST.get('email','') 
+            user.save()  
+            user_extra.phone_number = request.POST.get('number','')
+            user_extra.bio = request.POST.get('bio','')
+            user_extra.address = request.POST.get('location','')
+            user_extra.state = request.POST.get('state','')
+            user_extra.city = request.POST.get('city','')
+            user_extra.pincode = request.POST.get('pincode','')
+            user_extra.birth_date =  request.POST.get('birth_date','')
+            profile_picture = request.FILES.get('profile_picture','')
+            if profile_picture:
+                user_extra.profile_picture = profile_picture
+            
+            user_extra.save()            
+            messages.success(request,'update successfully')
+        except Exception as e:
+            print("user_extra could not be saved",e)
+        
+    return render(request, 'shop/profile_settings.html')
+        

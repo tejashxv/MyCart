@@ -20,14 +20,14 @@
               <img
                 src="{{ product.image.url }}"
                 class="card-img-top"
-                id="{{product.id}}"
+                id="imagepr{{product.id}}"
                 alt="{{ product.product_name }}"
                 style="height: 200px; object-fit: contain"
               />
               <div class="card-body flex-grow-1">
                 <h5 class="card-title" id="namepr{{product.id}}">{{ product.product_name }}</h5>
                 <!-- Truncated description -->
-                <p class="card-text description">{{ product.desc }}</p>
+                <p class="card-text description" id="descpr{{product.id}}">{{ product.desc }}</p>
                 <p class="card-text" >
                   <strong>Price:</strong> <span id="pricepr{{product.id}}">{{ product.product_price }} Rs</span>
                 </p>
@@ -108,12 +108,14 @@ crossorigin="anonymous"
     const idstr = this.id.toString(); // Button ID
     const productName = document.getElementById("name" + idstr)?.innerText || "Unknown Item"; // Get product name
     const productPrice = document.getElementById("price" + idstr)?.innerText || "Unknown Item"; 
-    console.log(productPrice);
+    const productdesc = document.getElementById("desc" + idstr)?.innerText || "Unknown Item"; 
+    const productimage = document.getElementById("image" + idstr)?.src || "Unknown Item"; 
+    console.log(productimage);
 
     if (cart[idstr] != undefined) {
       cart[idstr].quantity += 1; // Increment quantity if already exists
     } else {
-      cart[idstr] = { quantity: 1, name: productName, price: parseInt(productPrice) }; // Add new item
+      cart[idstr] = { quantity: 1, name: productName, price: parseInt(productPrice) , desc:productdesc , image:productimage}; // Add new item
     }
     console.log(cart);
 

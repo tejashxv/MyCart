@@ -11,7 +11,7 @@
         {% if request.user.is_authenticated %}
         <!-- Profile Picture -->
         <div class="flex justify-center mb-4">
-            <img src="https://via.placeholder.com/150" alt="User Profile Picture" class="w-24 h-24 rounded-full border-2 border-indigo-500">
+            <img src="{{user.users.profile_picture.url}}" alt="User Profile Picture" class="w-24 h-24 rounded-full border-2 border-indigo-500">
         </div>
 
         <!-- User Info -->
@@ -52,7 +52,7 @@
 
         <!-- Action Buttons -->
         <div class="mt-6 space-y-2">
-            <button class="w-full bg-indigo-500 text-white py-2 rounded-md shadow hover:bg-indigo-600">Edit Profile</button>
+            <a href="/shop/profile-settings/"><button class="w-full bg-indigo-500 text-white py-2 rounded-md shadow hover:bg-indigo-600">Edit Profile</button></a>
            <a href="/profile/logout"><button class="w-full bg-gray-200 text-gray-700 py-2 rounded-md shadow hover:bg-gray-300">Log Out</button></a>
         </div>
         {% endif %}
