@@ -17,7 +17,6 @@ import datetime
 
 from math import ceil
 # Create your views here.
-from itertools import islice
 
 
 
@@ -45,6 +44,50 @@ def index(request):
     params = {'allprod': allprod}
     return render(request, 'shop/index.html', params)
 
+
+def searchMatch(query, item):
+    '''Return true if query matches the item'''
+    query = query.lower()  
+    if (
+        query in (item.product_name or "").lower() or
+        query in (item.desc or "").lower() or
+        query in (item.category or "").lower() or
+        query in (item.subcategory or "").lower()
+    ):
+        return True
+    return False
+
+def chunk_products(products, chunk_size):
+    products = iter(products)
+    return iter(lambda: list(islice(products, chunk_size)), [])
+
+def search(request):
+    query = request.POST.get('search', '').strip().lower()  # Handle both GET and POST
+    print(f"Search query: {query if query else 'No query (returning all products)'}")
+
+    categories = Products.objects.values('category').distinct()
+    allprod = []
+
+    for category in categories:
+        category_name = category['category']
+        category_products = Products.objects.filter(category=category_name)
+        
+        if query:
+            prod = [item for item in category_products if searchMatch(query, item)]
+        else:
+            prod = category_products
+
+        if prod:  
+            product_chunks = list(chunk_products(prod, 4))  # Divide into groups of 4
+            allprod.append({
+                'category': category_name,
+                'product_chunks': product_chunks
+            })
+
+    params = {'allprod': allprod, "msg":""}
+    if len(allprod) == 0 :
+        params = {'msg': "No products found"}
+    return render(request, 'shop/search.html', params)
 
 def cart(request):
     
@@ -98,9 +141,7 @@ def tracker(request):
             pass
     return render(request, "shop/tracker.html")
 
-    
-def search(request):
-    return HttpResponse("this is search")
+
 def Thankyou(request):
     try:
         id = Orders.objects.latest('order_id')

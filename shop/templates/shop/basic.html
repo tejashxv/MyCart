@@ -3,38 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script> 
-
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-      crossorigin="anonymous"
-    ></script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-    
-
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js'></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap CSS (Latest Version) -->
+<link 
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+rel="stylesheet" 
+integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+crossorigin="anonymous"
+/>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- Bootstrap Icons -->
+<link 
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" 
+rel="stylesheet"
+/>
+
+<!-- FontAwesome (Latest) -->
+<link 
+rel="stylesheet" 
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" 
+integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" 
+crossorigin="anonymous" 
+referrerpolicy="no-referrer"
+/>
+
+<!-- jQuery (Latest Version) -->
+<script 
+src="https://code.jquery.com/jquery-3.7.1.min.js"
+crossorigin="anonymous"
+></script>
+
+<!-- Bootstrap JS Bundle (Includes Popper.js) -->
+<script 
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-Piv4xVNRyMGpqkP8FJ9eU6Gxh6j1Rr5tL4cXg3RBcCHHiKtFO/x7N7LrLOLCwH7l" 
+crossorigin="anonymous"
+></script>
 
     <title>{% block title %} {% endblock %}</title>
     <style>
@@ -115,15 +119,18 @@
       <a class="navbar-brand" href="/shop">My Awesome Cart</a>
       <div class="navbar-nav">
         <a class="nav-link active" href="/shop">Home</a>
-        <a class="nav-link" href="/shop/about">About Us</a>
-        <a class="nav-link" href="/shop/tracker">Tracker</a>
-        <a class="nav-link" href="/shop/contact">Contact Us</a>
-        <a class="nav-link" href="/blog">Blog</a>
+        <a class="nav-link active" href="/shop/about">About Us</a>
+        <a class="nav-link active" href="/shop/tracker">Tracker</a>
+        <a class="nav-link active" href="/shop/contact">Contact Us</a>
+        <a class="nav-link active" href="/blog">Blog</a>
       </div>
-      <form class="d-flex ms-auto">
+      <form method="POST" action="/shop/search/" class="d-flex ms-auto">
+        {% csrf_token %}
         <input
           class="form-control me-2"
           type="search"
+          name="search"
+          id="search"
           placeholder="Search"
           aria-label="Search"
         />
@@ -187,8 +194,7 @@
           </ul>
         </li>
      </ul>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      
       <script>
         const popoverTriggerList = document.querySelectorAll(
           '[data-bs-toggle="popover"]'
@@ -210,6 +216,148 @@
             }
           })
         });
+
+        let cart = localStorage.getItem("cart")
+    ? JSON.parse(localStorage.getItem("cart"))
+    : {};
+
+  // Update cart count and UI on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Add item to cart when "Add to Cart" button is clicked
+  $(document).on("click", ".cart", function () {
+    const idstr = this.id.toString(); // Button ID
+    const productName = document.getElementById("name" + idstr)?.innerText || "Unknown Item"; // Get product name
+    const productPrice = document.getElementById("price" + idstr)?.innerText || "Unknown Item"; 
+    const productdesc = document.getElementById("desc" + idstr)?.innerText || "Unknown Item"; 
+    const productimage = document.getElementById("image" + idstr)?.src || "Unknown Item"; 
+    console.log(productimage);
+
+    if (cart[idstr] != undefined) {
+      cart[idstr].quantity += 1; // Increment quantity if already exists
+    } else {
+      cart[idstr] = { quantity: 1, name: productName, price: parseInt(productPrice) , desc:productdesc , image:productimage}; // Add new item
+    }
+    console.log(cart);
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save to localStorage
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Update cart UI with items
+  function updateCartUI() {
+    for (let item in cart) {
+      const itemContainer = document.getElementById("div" + item); // Target item's div
+      if (itemContainer) {
+        // Show + and - buttons for items in the cart
+        itemContainer.innerHTML = `
+          <button id='minus${item}' class='btn btn-primary minus'>-</button>
+          <span id='quant${item}'>${cart[item].quantity}</span>
+          <button id='plus${item}' class='btn btn-primary plus'>+</button>
+        `;
+      }
+    }
+
+    updatePopover(cart);
+
+    // Restore "Add to Cart" button for items not in the cart
+    document.querySelectorAll(".cart").forEach((btn) => {
+      const id = btn.id;
+      if (!cart[id]?.quantity) {
+        const itemContainer = document.getElementById("div" + id);
+        if (itemContainer) {
+          itemContainer.innerHTML = `
+            <button id="${id}" class="btn btn-primary cart">Add to Cart</button>
+          `;
+        }
+      }
+    });
+  }
+
+  // Update popover content
+  function updatePopover(cart) {
+    let popStr = "<h5>Cart for your items</h5>";
+    let i = 1;
+
+    for (let item in cart) {
+      popStr += `<b>${i}.</b> ${cart[item].name} Qty: ${cart[item].quantity}<br>`;
+      i++;
+    }
+
+    const popoverTrigger = document.getElementById("popcart");
+
+    // Set the content and reinitialize popover
+    popoverTrigger.setAttribute("data-bs-content", popStr);
+
+    // Destroy existing popover instance, if any
+    const existingPopover = bootstrap.Popover.getInstance(popoverTrigger);
+    if (existingPopover) {
+      existingPopover.dispose();
+    }
+
+    // Reinitialize with updated content
+    new bootstrap.Popover(popoverTrigger, {
+      html: true,
+      container: "body",
+    });
+  }
+
+  // Update cart item count in navbar or badge
+  function updateCartCount() {
+    const cartCount = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+    const cartBadge = document.getElementById("cart");
+    if (cartBadge) {
+      cartBadge.innerText = cartCount;
+    }
+  }
+
+  // Decrement item quantity when "minus" button is clicked
+  $(document).on("click", ".minus", function () {
+    const id = this.id.replace("minus", ""); // Extract product ID
+    if (cart[id].quantity > 1) {
+      cart[id].quantity -= 1; // Decrease quantity
+    } else {
+      delete cart[id]; // Remove item from cart if quantity reaches 0
+
+      // Restore "Add to Cart" button
+      const itemContainer = document.getElementById("div" + id);
+      if (itemContainer) {
+        itemContainer.innerHTML = `
+          <button id="${id}" class="btn btn-primary cart">Add to Cart</button>
+        `;
+      }
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Increment item quantity when "plus" button is clicked
+  $(document).on("click", ".plus", function () {
+    const id = this.id.replace("plus", ""); // Extract product ID
+    cart[id].quantity += 1; // Increase quantity
+
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
+    updateCartUI();
+    updateCartCount();
+  });
+
+  // Clear cart
+  function clearCart() {
+    for (let item in cart) {
+      document.getElementById("div" + item).innerHTML =
+        '<button id="' + item + '" class="btn btn-primary cart">Add to cart</button>';
+    }
+    localStorage.clear();
+    cart = {};
+    updateCartCount();
+  }
+</script>
       </script>
     </nav>
 
