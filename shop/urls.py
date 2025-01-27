@@ -15,7 +15,7 @@ urlpatterns = [
     path("order/",views.Thankyou,name="Thankyou"),
     path("payment/",views.payment,name="payment"),
     path("handler/",views.verify_payment,name="paymenthandler"),
-    path("profile-settings/",views.settings,name="settings"),
+    path("profile-settings/",views.settingss,name="settingss"),
     
     # path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
     # path("handlerequest/",views.handlerequest,name="handleRequest"),

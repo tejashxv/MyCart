@@ -1,247 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <!-- Tailwind CSS -->
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout</title>
-  <!-- Tailwind CSS -->
-  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- this is razor pay checkout script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+      .font-medium {
+        margin-top: 7px;
+      }
+    </style>
+  </head>
 
-  <!-- this is razor pay checkout script -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <style>
-    .font-medium {
-      margin-top: 7px;
-    }
-  </style>
-</head>
-
-<body class="bg-gray-100">
-  <nav class="bg-white shadow-md">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <!-- Logo -->
-      <div class="flex items-center space-x-4">
-        <a href="#" class="text-2xl font-bold text-gray-800 hover:text-gray-600">
-          Checkout
-        </a>
-      </div>
-
-      <!-- Right Section -->
-      <div class="flex items-center space-x-6">
-        <!-- Links -->
-        <div class="hidden md:flex space-x-4">
-          <a href="/shop" class="text-gray-800 hover:text-blue-500 font-medium">Home</a>
-          <a href="/shop/about/" class="text-gray-800 hover:text-blue-500 font-medium">About</a>
-
-          <a href="/shop/tracker" class="text-gray-800 hover:text-blue-500 font-medium">Tracker</a>
-          <a href="/shop/contact" class="text-gray-800 hover:text-blue-500 font-medium">Contact</a>
-          <div>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="clearCart()">
-              Clear Cart
-            </button>
-          </div>
+  <body class="bg-gray-100">
+    <nav class="bg-white shadow-md">
+      <div
+        class="container mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <!-- Logo -->
+        <div class="flex items-center space-x-4">
+          <a
+            href="#"
+            class="text-2xl font-bold text-gray-800 hover:text-gray-600"
+          >
+            Checkout
+          </a>
         </div>
 
-        <!-- Mobile Menu Button -->
-        <div class="md:hidden">
-          <button id="menu-button" class="text-gray-800 focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
+        <!-- Right Section -->
+        <div class="flex items-center space-x-6">
+          <!-- Links -->
+          <div class="hidden md:flex space-x-4">
+            <a
+              href="/shop"
+              class="text-gray-800 hover:text-blue-500 font-medium"
+              >Home</a
+            >
+            <a
+              href="/shop/about/"
+              class="text-gray-800 hover:text-blue-500 font-medium"
+              >About</a
+            >
 
-      <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden">
-        <div class="bg-gray-100 p-4">
-          <a href="/shop" class="block py-2 text-gray-800 hover:text-blue-500">Home</a>
-          <a href="/shop/about/" class="block py-2 text-gray-800 hover:text-blue-500">About</a>
-
-          <a href="/shop/contact" class="block py-2 text-gray-800 hover:text-blue-500">Contact</a>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container mx-auto my-10">
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div class="p-6">
-        <h2 class="text-2xl font-bold mb-4">Step 1 - Review Your Products</h2>
-        <div>
-          <ul class="list-group" id="items">
-
-          </ul>
-        </div>
-
-
-      </div>
-    </div>
-  </div>
-
-  <div class="container mx-auto my-10">
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div class="p-6">
-        <h2 class="text-2xl font-bold mb-4">Step 2 - Address and Detail</h2>
-        <form id="checkout-form" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="itemsJson" id="itemsJson">
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-              Name
-            </label>
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name" name="name" type="text" placeholder="Your Name" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-              Email
-            </label>
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email" name="email" type="email" placeholder="Your Email" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
-              Address
-            </label>
-
-            <input
-              class="shadow appearance-none border rounded w-full py-6 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="address" name="address" type="text" placeholder="Your Address"
-              value="{{ user_obj.address|default:'Phone not available' }}" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
-              Phone
-            </label>
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phone" value="{{ user_obj.phone| default:'Address not available' }}" name="phone" type="tel" placeholder="Your Number" pattern="[0-9]{10}" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="city">
-              City
-            </label>
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="city" name="city" type="text" placeholder="Your City" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="state">
-              State
-            </label>
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="state" name="state" type="text" placeholder="Your State" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="zip">
-              Zip Code
-            </label>
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="zip_code" name="zip_code" type="text" placeholder="Your Zip Code" required />
-          </div>
-          <input type="hidden" id="totalprice-input" name="total_price">
-          <div class="flex items-center space-x-2 text-sm text-gray-600 bg-gray-100 p-2 mt-4">
-            <p>Your cart total is <span class="text-gray-500" id="totalprice">Current Page</span>. Thanks for using My
-              Awesome Cart</p>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <button
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit" 
-              id="send-button"
+            <a
+              href="/shop/tracker"
+              class="text-gray-800 hover:text-blue-500 font-medium"
+              >Tracker</a
+            >
+            <a
+              href="/shop/contact"
+              class="text-gray-800 hover:text-blue-500 font-medium"
+              >Contact</a
+            >
+            <div>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onclick="clearCart()"
               >
-              Place Order
+                Clear Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <div class="md:hidden">
+            <button id="menu-button" class="text-gray-800 focus:outline-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
             </button>
           </div>
-        </form>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+          <div class="bg-gray-100 p-4">
+            <a href="/shop" class="block py-2 text-gray-800 hover:text-blue-500"
+              >Home</a
+            >
+            <a
+              href="/shop/about/"
+              class="block py-2 text-gray-800 hover:text-blue-500"
+              >About</a
+            >
+
+            <a
+              href="/shop/contact"
+              class="block py-2 text-gray-800 hover:text-blue-500"
+              >Contact</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mx-auto my-10">
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-2xl font-bold mb-4">Step 1 - Review Your Products</h2>
+          <div>
+            <ul class="list-group" id="items"></ul>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    // Clear cart function
-    function clearCart() {
-      localStorage.removeItem("cart");
-      alert("Cart cleared!");
-    }
+    <div class="container mx-auto my-10">
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-2xl font-bold mb-4">Step 2 - Address and Detail</h2>
+          <form id="checkout-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" id="cartData" name="cartData">
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="name"
+              >
+                Name
+              </label>
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Your Name"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="email"
+              >
+                Email
+              </label>
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Your Email"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="address"
+              >
+                Address
+              </label>
 
-    // Form validation
-    document.getElementById("checkout-form").addEventListener(
-      "submit",
-      function (event) {
-        if (!this.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        this.classList.add("was-validated");
-      },
-      false
-    );
+              <input
+                class="shadow appearance-none border rounded w-full py-6 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="address"
+                name="address"
+                type="text"
+                placeholder="Your Address"
+                value="{{ user_obj.address|default:'Phone not available' }}"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="phone"
+              >
+                Phone
+              </label>
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="phone"
+                value="{{ user_obj.phone_number| default:'Phone not available' }}"
+                name="phone"
+                type="tel"
+                placeholder="Your Number"
+                pattern="[0-9]{10}"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="city"
+              >
+                City
+              </label>
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="city"
+                name="city"
+                type="text"
+                placeholder="Your City"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="state"
+              >
+                State
+              </label>
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="state"
+                name="state"
+                type="text"
+                placeholder="Your State"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="zip"
+              >
+                Zip Code
+              </label>
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="zip_code"
+                name="zip_code"
+                type="text"
+                placeholder="Your Zip Code"
+                required
+              />
+            </div>
+            <input type="hidden" id="totalprice-input" name="total_price" />
+            <div
+              class="flex items-center space-x-2 text-sm text-gray-600 bg-gray-100 p-2 mt-4"
+            >
+              <p>
+                Your cart total is
+                <span class="text-gray-500" id="totalprice">Current Page</span>.
+                Thanks for using My Awesome Cart
+              </p>
+            </div>
 
-    if (localStorage.getItem("cart") == null) {
-      var cart = {};
-    } else {
-      cart = JSON.parse(localStorage.getItem("cart"));
-    }
+            <div
+              class="flex items-center justify-between"
+              id="paymemnt-button"
+            ></div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-    var sum = 0;
-    var totalprice = 0;
+    <script>
+      // Clear cart function
+      function clearCart() {
+        localStorage.removeItem("cart");
+        alert("Cart cleared!");
+      }
 
-    if ($.isEmptyObject(cart)) {
-      mystr = `<h3>Your cart is empty!</h3>`;
-      $("#items").append(mystr);
-    } else {
-      for (var item in cart) {
-        let name = cart[item].name;
-        let qty = cart[item].quantity;
-        let itemprice = cart[item].price;
-        sum += qty;
-        totalprice += qty * itemprice;
+      // Form validation
+      document.getElementById("checkout-form").addEventListener(
+        "submit",
+        function (event) {
+          if (!this.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          this.classList.add("was-validated");
+        },
+        false
+      );
 
-        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+      if (localStorage.getItem("cart") == null) {
+        var cart = {};
+      } else {
+        cart = JSON.parse(localStorage.getItem("cart"));
+      }
+
+      var sum = 0;
+      var totalprice = 0;
+
+      if ($.isEmptyObject(cart)) {
+        mystr = `<h3>Your cart is empty!</h3>`;
+        $("#items").append(mystr);
+      } else {
+        for (var item in cart) {
+          let name = cart[item].name;
+          let qty = cart[item].quantity;
+          let itemprice = cart[item].price;
+          sum += qty;
+          totalprice += qty * itemprice;
+
+          mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
                         ${name}
                         <span class="badge text-bg-primary rounded-pill">${qty}</span>
                     </li>`;
-        $("#items").append(mystr);
+          $("#items").append(mystr);
+        }
       }
+
+      // Display the total price in the checkout page
+      document.getElementById("totalprice").innerText = `₹${totalprice}`;
+
+      // Store total price in hidden input before form submission
+      document
+        .getElementById("checkout-form")
+        .addEventListener("submit", function () {
+          document.getElementById("totalprice-input").value = totalprice;
+        });
+
+      console.log("Total Price: ", totalprice);
+
+      if (totalprice > 1000000) {
+        document.getElementById(
+          "paymemnt-button"
+        ).innerHTML = `<p><h3>Amount is too high.</h3></p>`;
+      } else {
+        document.getElementById("paymemnt-button").innerHTML = `<button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      type="submit" 
+      id="send-button"
+      >
+      Place Order
+    </button>`;
+      }
+
+
+      
+      
+
+      // sending cart data 
+      function updateCartInput() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || {};
+        
+        // Set cart JSON data to hidden input field
+        document.getElementById("cartData").value = JSON.stringify(cart);
     }
 
-    // Display the total price in the checkout page
-    document.getElementById("totalprice").innerText = `₹${totalprice}`;
-
-    // Store total price in hidden input before form submission
-    document.getElementById("checkout-form").addEventListener("submit", function () {
-      document.getElementById("totalprice-input").value = totalprice;
+    // Update the hidden input before submitting the form
+    document.getElementById("send-button").addEventListener("click", function() {
+        updateCartInput();
     });
-
-    console.log("Total Price: ", totalprice);
-
-
     
-
-    
-   
-
-   
-
-  </script>
-
-
-   
-</body>
-
+    </script>
+  </body>
 </html>

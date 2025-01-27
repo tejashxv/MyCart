@@ -3,80 +3,80 @@
 {% block title %}Track Your Order{% endblock %}
 
 {% block body %}
-<div class="container mx-auto my-10">
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div class="p-6">
-        <h2 class="text-2xl font-bold mb-4">Track Your order using order id and email</h2>
-        <form id="checkout-form" method="post" action="" id="tracker-form">
-            {% csrf_token %}
-            <div class="mb-4">
-            <label
-                class="block text-gray-700 text-sm font-bold mb-2"
-                for="name"
-            >
-                Order Id
-            </label>
-            <input
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="orderid"
-                name="orderid"
-                type="text"
-                placeholder="Order Id"
-                required
-            />
-            </div>
-            <div class="mb-4">
-            <label
-                class="block text-gray-700 text-sm font-bold mb-2"
-                for="email"
-            >
-                Email
-            </label>
-            <input
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Your Email"
-                required
-            />
-            </div>
-            <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit"
-            >
-                Track Order
-            </button>
-        </form>
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+            <h2 class="text-center fw-bold mb-4"><i class="bi bi-truck"></i> Track Your Order</h2>
+            <p class="text-center text-muted">Enter your order ID and email to get the latest updates.</p>
+            
+            <form id="tracker-form" method="post" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="orderid" class="form-label fw-semibold"><i class="bi bi-file-earmark-text"></i> Order ID</label>
+                    <input type="text" class="form-control shadow-sm" id="orderid" name="orderid" placeholder="Enter your Order ID" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-semibold"><i class="bi bi-envelope"></i> Email</label>
+                    <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter your Email" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold">
+                    <i class="bi bi-search"></i> Track Order
+                </button>
+            </form>
         </div>
     </div>
 </div>
 
 {% if product %}
-    {% for orderupdate in orderupdate %}
-    <div class="container mx-auto my-10">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div class="p-6">
-            <h2 class="text-2xl font-bold mb-4">Your order Status</h2>
-            <ul class="list-group" id="items">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{orderupdate.update_desc}}
-                <span class="badge text-bg-primary rounded-pill">{{orderupdate.timestamp}}</span>
-            </li>
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+            <h2 class="text-center fw-bold mb-4"><i class="bi bi-box-seam"></i> Your Order Status</h2>
+            <ul class="list-group">
+                {% for orderupdate in orderupdate %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <i class="bi bi-info-circle-fill text-primary"></i> {{ orderupdate.update_desc }}
+                    <span class="badge bg-primary rounded-pill">{{ orderupdate.timestamp }}</span>
+                </li>
+                {% endfor %}
             </ul>
         </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+            <h2 class="text-center fw-bold mb-4"><i class="bi bi-box-seam"></i> Your Order Details</h2>
+            <ul class="list-group" id="cart-item">
+                {% for product_id, product in cart_item.items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <i class="bi bi-info-circle-fill text-primary"></i> {{ product.name }}
+                    <span class="badge bg-primary rounded-pill">{{ product.price }}</span>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
-    {% endfor %}
+</div>
+
 {% else %}
-    <div class="container mx-auto my-10">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="p-6">
-                <h2 class="text-2xl font-bold mb-4">No Order Updates Found</h2>
-                <p>There are currently no updates for your order.</p>
-            </div>
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5 text-center">
+            <h2 class="text-danger fw-bold mb-4"><i class="bi bi-exclamation-circle-fill"></i> No Order Updates Found</h2>
+            <p class="text-muted">There are currently no updates for your order. Please check your details and try again.</p>
         </div>
     </div>
+</div>
 {% endif %}
 
+{% endblock %}
+{% block js %}
+
+<script>
+  // Initialize the cart from localStorage or create an empty object
+  
+
+</script>
 {% endblock %}

@@ -34,11 +34,7 @@ crossorigin="anonymous"
 ></script>
 
 <!-- Bootstrap JS Bundle (Includes Popper.js) -->
-<script 
-src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
-integrity="sha384-Piv4xVNRyMGpqkP8FJ9eU6Gxh6j1Rr5tL4cXg3RBcCHHiKtFO/x7N7LrLOLCwH7l" 
-crossorigin="anonymous"
-></script>
+
 
     <title>{% block title %} {% endblock %}</title>
     <style>
@@ -234,7 +230,7 @@ crossorigin="anonymous"
     const productPrice = document.getElementById("price" + idstr)?.innerText || "Unknown Item"; 
     const productdesc = document.getElementById("desc" + idstr)?.innerText || "Unknown Item"; 
     const productimage = document.getElementById("image" + idstr)?.src || "Unknown Item"; 
-    console.log(productimage);
+    
 
     if (cart[idstr] != undefined) {
       cart[idstr].quantity += 1; // Increment quantity if already exists

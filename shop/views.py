@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from .models import *
 from itertools import islice
 from django.contrib import messages
-
 import json
 from django.views.decorators.csrf import csrf_exempt
 from profiles import models
@@ -115,30 +114,24 @@ def contact(request):
 
     
 def tracker(request):
-    
     if request.method == "POST":
         orderid = request.POST.get('orderid', '')
         email = request.POST.get('email', '')
         try:
             order = Orders.objects.get(order_id=orderid, email=email)
             orderupdate = OrderUpdate.objects.filter(order_id=order)
-            print(orderupdate)
-            print(order)
+            cart_j = order.items_json
+            print(cart_j)  # Debug statement
             
-            return render(request, "shop/tracker.html", {'product': order, 'orderupdate': orderupdate})
             
-            # if len(order) > 0:
-            #     update = OrderUpdate.objects.filter(order_id=orderid)
-            #     updates = []
-            #     for item in update:
-            #         updates.append({'text': item.update_desc, 'time': item.timestamp})
-            #         response = json.dumps(updates, default=str)
-            #         print(updates)
-            #     return render(request, "shop/tracker.html", {'updates': updates, 'order': order[0]})
-            # else:
-            #     pass
-        except Exception as e: 
-            pass
+            
+            return render(request, "shop/tracker.html", {
+                'product': order,
+                'orderupdate': orderupdate,
+                'cart_item': cart_j
+            })
+        except Exception as e:
+            print("Error:", e)  # Debugging errors
     return render(request, "shop/tracker.html")
 
 
@@ -173,7 +166,7 @@ def checkout(request):
         
         try:
             # Extract necessary details from the JSON
-            items_json = request.POST.get('items_json','')
+            items_json = request.POST.get('cartData','')
             name = request.POST.get('name','')
             amount = request.POST.get('total_price','')
             email = request.POST.get('email','')
@@ -182,9 +175,12 @@ def checkout(request):
             city = request.POST.get('city','')
             state = request.POST.get('state','')
             zip_code = request.POST.get('zip_code','')
+            
+            
+            cart_dict = json.loads(items_json)
 
             # Print inputs for debugging
-            print(f"Received: {items_json}, {name}, {email}, {address}, {phone}, {city}, {state}, {zip_code}, {amount}")
+            print(f"Received: {cart_dict}, {name}, {email}, {address}, {phone}, {city}, {state}, {zip_code}, {amount}")
 
             # Process payment with Razorpay
             currency = 'INR'
@@ -199,10 +195,10 @@ def checkout(request):
             print("*****")
             print("Razorpay Order:", razorpay_order)
             print("*****")
-            
+            print(settings.RAZOR_KEY_ID)
             order = Orders.objects.create(
                 user=request.user,
-                items_json=items_json,
+                items_json=cart_dict,
                 name=name,
                 email=email,
                 address=address,
@@ -260,7 +256,7 @@ def checkout(request):
             print(f"Error processing payment: {e}")
             # return JsonResponse({"status": "error", "message": "Something went wrong. Please try again."})
 
-    # GET request
+    user_obj = models.UserExtra.objects.get(user = request.user)
     return render(request, 'shop/checkout.html', {'user_obj':user_obj})
 
 
@@ -307,7 +303,7 @@ def verify_payment(request):
     return HttpResponse("Invalid request method", status=405)
                 
 @login_required(login_url='/profile/login')
-def settings(request):
+def settingss(request):
     try:
         user_extra = UserExtra.objects.get(user=request.user)
         user=request.user
@@ -342,4 +338,9 @@ def settings(request):
             print("user_extra could not be saved",e)
         
     return render(request, 'shop/profile_settings.html')
+        
+        
+        
+        
+        
         
