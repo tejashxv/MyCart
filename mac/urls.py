@@ -25,7 +25,7 @@ urlpatterns = [
     path('shop/',include('shop.urls')),
     path('blog/',include('blog.urls')),
     path('profile/',include('profiles.urls')),
-    path('',views.index,name='index'),
+    path('',views.index,name='Index'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

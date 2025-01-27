@@ -32,7 +32,7 @@ class Contact(models.Model):
 class Orders(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     order_id = models.AutoField(primary_key=True)
-    items_json = models.CharField(max_length=5000)
+    items_json = models.JSONField(default=dict, null=True , blank=True) 
     amount = models.IntegerField(default=0)
     name = models.CharField(max_length=100)    
     email = models.CharField(max_length=100)    

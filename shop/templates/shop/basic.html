@@ -112,15 +112,15 @@ crossorigin="anonymous"
   <body>
     <!-- Navigation bar -->
     <nav class="navbar navbar-expand bg-dark navbar-dark">
-      <a class="navbar-brand" href="/shop">My Awesome Cart</a>
+      <a class="navbar-brand" href="{% url 'Index' %}">My Awesome Cart</a>
       <div class="navbar-nav">
-        <a class="nav-link active" href="/shop">Home</a>
-        <a class="nav-link active" href="/shop/about">About Us</a>
-        <a class="nav-link active" href="/shop/tracker">Tracker</a>
-        <a class="nav-link active" href="/shop/contact">Contact Us</a>
-        <a class="nav-link active" href="/blog">Blog</a>
+        <a class="nav-link active" href="{% url 'ShopHome' %}">Home</a>
+        <a class="nav-link active" href="{% url 'About' %}">About Us</a>
+        <a class="nav-link active" href="{% url 'Tracker' %}">Tracker</a>
+        <a class="nav-link active" href="{% url 'Contact' %}">Contact Us</a>
+        <a class="nav-link active" href="{% url 'BlogIndex' %}">Blog</a>
       </div>
-      <form method="POST" action="/shop/search/" class="d-flex ms-auto">
+      <form method="POST" action="{% url 'Search' %}" class="d-flex ms-auto">
         {% csrf_token %}
         <input
           class="form-control me-2"
@@ -140,7 +140,7 @@ crossorigin="anonymous"
         data-bs-toggle="popover"
         
       >
-        <a class="nav-link" href="/shop/cart/"
+        <a class="nav-link" href="{% url 'Cart' %}"
           >cart(<span id="cart" class="badge bg-primary">0</span> )</a
         >
       </button>
@@ -173,15 +173,15 @@ crossorigin="anonymous"
             
 
             
-            <li><a class="dropdown-item" href="/shop/profile-settings/"><i class="fas fa-cog fa-fw"></i> Settings</a></li>
+            <li><a class="dropdown-item" href="{% url 'Settingss' %}"><i class="fas fa-cog fa-fw"></i> Settings</a></li>
             <li><hr class="dropdown-divider"></li>
 
             {% if request.user.is_authenticated %}
-            <li><a class="dropdown-item" href="/profile/logout"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a></li>
+            <li><a class="dropdown-item" href="{% url 'logoutPage' %}"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a></li>
             {% endif %}
             {% if not request.user.is_authenticated %}
               
-            <li><a class="dropdown-item" href="/profile/"><i class="bi bi-person-circle"></i> Registration</a></li>
+            <li><a class="dropdown-item" href="{% url 'profiles' %}"><i class="bi bi-person-circle"></i> Registration</a></li>
             {% endif %}
             {% if not   request.user.is_authenticated %}
               

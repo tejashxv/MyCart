@@ -121,8 +121,10 @@ def tracker(request):
             order = Orders.objects.get(order_id=orderid, email=email)
             orderupdate = OrderUpdate.objects.filter(order_id=order)
             cart_j = order.items_json
-            print(cart_j)  # Debug statement
+            # print(type(cart_j))  # Debug statement
             
+            
+             
             
             
             return render(request, "shop/tracker.html", {
@@ -176,8 +178,9 @@ def checkout(request):
             state = request.POST.get('state','')
             zip_code = request.POST.get('zip_code','')
             
-            
+            # print(type(items_json))
             cart_dict = json.loads(items_json)
+            
 
             # Print inputs for debugging
             print(f"Received: {cart_dict}, {name}, {email}, {address}, {phone}, {city}, {state}, {zip_code}, {amount}")

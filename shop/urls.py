@@ -5,7 +5,7 @@ from .  import views,models
 
 urlpatterns = [
     path("",views.index,name="ShopHome"),
-    path("cart/",views.cart,name="About"),
+    path("cart/",views.cart,name="Cart"),
     path("about/",views.about,name="About"),
     path("contact/",views.contact,name="Contact"),
     path("tracker/",views.tracker,name="Tracker"),
@@ -15,7 +15,7 @@ urlpatterns = [
     path("order/",views.Thankyou,name="Thankyou"),
     path("payment/",views.payment,name="payment"),
     path("handler/",views.verify_payment,name="paymenthandler"),
-    path("profile-settings/",views.settingss,name="settingss"),
+    path("profile-settings/",views.settingss,name="Settingss"),
     
     # path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
     # path("handlerequest/",views.handlerequest,name="handleRequest"),
