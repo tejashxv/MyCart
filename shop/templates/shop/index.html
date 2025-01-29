@@ -12,7 +12,7 @@
           {% for product in chunk %}
           <div class="col">
             <div class="card h-100 d-flex flex-column">
-              <img src="{{ product.image.url }}" class="card-img-top" id="imagepr{{product.id}}" alt="{{ product.product_name }}" style="height: 200px; object-fit: contain" />
+              <img src="{{ product.image }}" class="card-img-top" id="imagepr{{product.id}}" alt="{{ product.product_name }}" style="height: 200px; object-fit: contain" />
               <div class="card-body flex-grow-1">
                 <h5 class="card-title text-center" id="namepr{{product.id}}">{{ product.product_name }}</h5>
                 <p class="card-text description" id="descpr{{product.id}}">{{ product.desc }}</p>

@@ -10,9 +10,14 @@ from profiles.models import UserExtra
 from django.contrib.auth.decorators import login_required
 import razorpay
 from django.conf import settings
-from django.http import HttpResponseBadRequest
-from django.http import JsonResponse
-import datetime
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import ProductSerializer
+from .productRecommender import get_similer_products
+import random
+# from django.http import HttpResponseBadRequest
+# from django.http import JsonResponse
+# import datetime
 
 from math import ceil
 # Create your views here.
@@ -21,9 +26,21 @@ from math import ceil
 
 
 
+import random
+from itertools import islice
+from django.shortcuts import render
+from shop.models import Products
+
 def index(request): 
     products = Products.objects.all()
-    categories = Products.objects.values('category').distinct()
+    
+    # Get distinct categories and shuffle them
+    categories = list(Products.objects.values('category').distinct())
+    random.shuffle(categories)  # Shuffle the list of categories
+
+    # Select only 10 random categories (or less if fewer exist)
+    categories = categories[:10]
+
     allprod = []
 
     def chunk_products(products, chunk_size):
@@ -45,48 +62,44 @@ def index(request):
 
 
 def searchMatch(query, item):
-    '''Return true if query matches the item'''
-    query = query.lower()  
-    if (
+    """Return True if query matches any field in the item."""
+    query = query.lower()
+    return (
         query in (item.product_name or "").lower() or
         query in (item.desc or "").lower() or
         query in (item.category or "").lower() or
         query in (item.subcategory or "").lower()
-    ):
-        return True
-    return False
+    )
 
 def chunk_products(products, chunk_size):
+    """Divide products into chunks of specified size."""
     products = iter(products)
     return iter(lambda: list(islice(products, chunk_size)), [])
 
 def search(request):
-    query = request.POST.get('search', '').strip().lower()  # Handle both GET and POST
+    query = request.POST.get('search', '').strip().lower()
     print(f"Search query: {query if query else 'No query (returning all products)'}")
 
-    categories = Products.objects.values('category').distinct()
+    categories = Products.objects.values_list('category', flat=True).distinct()
     allprod = []
 
-    for category in categories:
-        category_name = category['category']
+    for category_name in categories:
         category_products = Products.objects.filter(category=category_name)
         
         if query:
-            prod = [item for item in category_products if searchMatch(query, item)]
+            filtered_products = [item for item in category_products if searchMatch(query, item)]
         else:
-            prod = category_products
+            filtered_products = list(category_products)
 
-        if prod:  
-            product_chunks = list(chunk_products(prod, 4))  # Divide into groups of 4
+        product_chunks = list(chunk_products(filtered_products, 4))  # Group by 4
+        
+        if product_chunks:
             allprod.append({
                 'category': category_name,
                 'product_chunks': product_chunks
             })
-
-    params = {'allprod': allprod, "msg":""}
-    if len(allprod) == 0 :
-        params = {'msg': "No products found"}
-    return render(request, 'shop/search.html', params)
+    
+    return render(request, 'shop/search.html', {'allprod': allprod, 'query': query})
 
 def cart(request):
     
@@ -150,9 +163,10 @@ def Thankyou(request):
     
     
 def productview(request, myid):
-    products = Products.objects.filter(id=myid)
-    print(products)
-    return render(request, "shop/prodview.html" , {'products':products[0]})
+    print("Received myid:", myid, type(myid))
+    _product = Products.objects.get(id=myid)
+    similar_product = get_similer_products(myid ,20)
+    return render(request, 'shop/prodview.html', {'product': _product, 'similar_products': similar_product})
 
 
 
@@ -345,5 +359,17 @@ def settingss(request):
         
         
         
-        
-        
+class ProductsAPI(APIView):
+    def get(self, request):
+        _product = Products.objects.all().order_by('?')[:40]
+        serializer = ProductSerializer(_product, many=True)
+        return Response({'products': serializer.data})
+    
+    
+class ProductDetailAPI(APIView):
+    def get(self, request, id):
+        _product = Products.objects.get(id = id)
+        serializer = ProductSerializer(_product)
+        similar_product = get_similer_products(id ,20)
+        similar_product_serializer = ProductSerializer(similar_product, many=True)
+        return Response({'product': serializer.data, 'similar_products': similar_product_serializer.data})
