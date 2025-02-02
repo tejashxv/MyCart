@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-mguvw0#g0-^_6ld)$)5nlc1bq!-+m4cladvipkibbi(p&9c_m*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'blog',
     'profiles',
@@ -52,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     
 ]
 
@@ -146,5 +144,4 @@ RAZOR_KEY_ID = 'rzp_test_NY17O0pSjRmrGP'
 RAZOR_KEY_SECRET = '2prM7GP0jLhhJeXb5Nlw8Ilg'
 
 #vercel deployement
-ALLOWED_HOSTS = ['MyCart.vercel.app', '127.0.0.1']
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
